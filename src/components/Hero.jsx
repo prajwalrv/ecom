@@ -1,13 +1,44 @@
-import { useRef } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { Flame, Star } from 'lucide-react'
 import { useCart } from '../context/CartContext'
 import video1 from '../../assets/red_chilly_latern_assest/Video-59594.mp4'
 import video2 from '../../assets/red_chilly_latern_assest/Video-89530.mp4'
 import heroImg from '../../assets/red_chilly_latern_assest/unnamed.jpg'
 
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(false)
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth <= 768)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
+  return isMobile
+}
+
 export default function Hero() {
   const { setIsOpen } = useCart()
   const videoRef = useRef(null)
+  const preloaderRef = useRef(null)
+  const isMobile = useIsMobile()
+  const [preloaderDone, setPreloaderDone] = useState(false)
+
+  useEffect(() => {
+    const video = preloaderRef.current
+    if (!isMobile || !video) return
+
+    const handleEnd = () => {
+      // Keep showing for 4 seconds after video ends
+      setTimeout(() => setPreloaderDone(true), 4000)
+    }
+    video.addEventListener('ended', handleEnd)
+    // Fallback: if video can't play, dismiss after 7s
+    const fallback = setTimeout(() => setPreloaderDone(true), 7000)
+    return () => {
+      video.removeEventListener('ended', handleEnd)
+      clearTimeout(fallback)
+    }
+  }, [isMobile])
 
   const scrollToMenu = () => {
     document.getElementById('menu')?.scrollIntoView({ behavior: 'smooth' })
@@ -15,22 +46,41 @@ export default function Hero() {
 
   return (
     <section id="hero" className="hero">
-      {/* Video Background */}
-      <div className="hero-video-bg">
-        <video
-          ref={videoRef}
-          autoPlay
-          muted
-          loop
-          playsInline
-          poster={heroImg}
-          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-        >
-          <source src={video1} type="video/mp4" />
-          <source src={video2} type="video/mp4" />
-          <img src={heroImg} alt="Red Chilli Lantern" className="hero-fallback-img" />
-        </video>
-      </div>
+      {/* Mobile Preloader — fullscreen video that fades out */}
+      {isMobile && (
+        <div className={`hero-preloader ${preloaderDone ? 'hero-preloader--hidden' : ''}`}>
+          <video
+            ref={preloaderRef}
+            autoPlay
+            muted
+            playsInline
+            className="hero-preloader-video"
+            poster={heroImg}
+          >
+            <source src={video1} type="video/mp4" />
+            <source src={video2} type="video/mp4" />
+          </video>
+        </div>
+      )}
+
+      {/* Video Background — desktop only */}
+      {!isMobile && (
+        <div className="hero-video-bg">
+          <video
+            ref={videoRef}
+            autoPlay
+            muted
+            loop
+            playsInline
+            poster={heroImg}
+            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+          >
+            <source src={video1} type="video/mp4" />
+            <source src={video2} type="video/mp4" />
+            <img src={heroImg} alt="Red Chilli Lantern" className="hero-fallback-img" />
+          </video>
+        </div>
+      )}
 
       {/* Overlays & Glows */}
       <div className="hero-overlay" />
