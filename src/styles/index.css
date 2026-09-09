@@ -60,6 +60,7 @@
 html {
   scroll-behavior: smooth;
   font-size: 16px;
+  overflow-x: hidden;
 }
 
 body {
@@ -704,7 +705,7 @@ ul, ol {
   text-align: center;
   max-width: 800px;
   padding: 0 24px;
-  padding-top: var(--nav-height);
+  padding-top: calc(var(--nav-height) + 44px);
 }
 
 .hero-eyebrow {
@@ -2257,6 +2258,142 @@ ul, ol {
 }
 
 /* ===================================
+   LOCATION BANNER
+   =================================== */
+
+.location-banner {
+  position: fixed;
+  top: var(--nav-height);
+  left: 0;
+  right: 0;
+  z-index: 899;
+  padding: 10px 0;
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  transition: all var(--transition-base);
+  overflow: hidden;
+}
+
+.location-banner-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.location-banner-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.location-banner--success {
+  background: rgba(39, 174, 96, 0.12);
+  border-bottom: 1px solid rgba(39, 174, 96, 0.25);
+  color: #4CAF50;
+}
+
+.location-banner--warning {
+  background: rgba(212, 175, 55, 0.1);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.25);
+  color: var(--color-gold);
+}
+
+.location-banner--info {
+  background: rgba(100, 100, 100, 0.1);
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+}
+
+.location-banner--loading {
+  background: rgba(100, 100, 100, 0.08);
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text-dim);
+}
+
+.location-banner-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.location-banner-btn {
+  padding: 4px 12px;
+  background: rgba(192, 57, 43, 0.15);
+  border: 1px solid rgba(192, 57, 43, 0.3);
+  border-radius: var(--radius-full);
+  color: var(--color-crimson-light);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.location-banner-btn:hover {
+  background: var(--color-crimson);
+  color: white;
+  border-color: var(--color-crimson);
+}
+
+.location-banner-close {
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-full);
+  background: transparent;
+  border: none;
+  color: inherit;
+  opacity: 0.5;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.location-banner-close:hover {
+  opacity: 1;
+}
+
+.location-banner-spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  display: inline-block;
+}
+
+/* ===================================
+   DELIVERY AREA CHECK
+   =================================== */
+
+.delivery-check {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.delivery-check--ok {
+  background: rgba(39, 174, 96, 0.1);
+  border: 1px solid rgba(39, 174, 96, 0.25);
+  color: #4CAF50;
+}
+
+.delivery-check--blocked {
+  background: rgba(192, 57, 43, 0.1);
+  border: 1px solid rgba(192, 57, 43, 0.3);
+  color: var(--color-crimson-light);
+}
+
+/* ===================================
    RESPONSIVE
    =================================== */
 
@@ -2298,6 +2435,32 @@ ul, ol {
 
   .mobile-menu-btn {
     display: flex;
+  }
+
+  .hero-content {
+    padding-top: calc(var(--nav-height) + 40px);
+  }
+
+  .location-banner {
+    font-size: 0.75rem;
+    padding: 8px 0;
+  }
+
+  .location-banner-inner {
+    gap: 8px;
+  }
+
+    .lb-full {
+    display: none;
+  }
+
+  .lb-short {
+    display: inline;
+  }
+
+  .location-banner-btn {
+    padding: 3px 10px;
+    font-size: 0.7rem;
   }
 
   .section-padding {

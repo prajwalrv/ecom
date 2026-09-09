@@ -1,7 +1,8 @@
-import { useState } from 'react'
-import { X, Send, MapPin, ShoppingBag } from 'lucide-react'
+import { useState, useMemo } from 'react'
+import { X, Send, MapPin, ShoppingBag, CheckCircle, AlertTriangle } from 'lucide-react'
 import { useCart } from '../context/CartContext'
 import { supabase } from '../lib/supabase'
+import { isDeliveryArea, extractPinCode } from '../data/deliveryAreas'
 
 function generateOrderId() {
   return 'RCL-' + Date.now().toString(36).toUpperCase()
@@ -27,6 +28,11 @@ export default function OrderModal() {
   const [orderId, setOrderId] = useState('')
   const [error, setError] = useState('')
   const [emailFailed, setEmailFailed] = useState(false)
+
+  // Delivery area PIN check
+  const detectedPin = useMemo(() => extractPinCode(form.address), [form.address])
+  const deliveryAvailable = useMemo(() => isDeliveryArea(detectedPin), [detectedPin])
+  const isDeliveryBlocked = form.deliveryType === 'delivery' && detectedPin && !deliveryAvailable
 
   if (!isOrderModalOpen) return null
 
@@ -54,6 +60,12 @@ export default function OrderModal() {
 
     if (form.deliveryType === 'delivery' && !form.address.trim()) {
       setError('Please enter your delivery address.')
+      return
+    }
+
+    // Hard block: delivery to non-served area
+    if (form.deliveryType === 'delivery' && detectedPin && !deliveryAvailable) {
+      setError('Sorry, we don\'t deliver to your area yet. We\'ll be coming soon!')
       return
     }
 
@@ -357,11 +369,28 @@ Customer is waiting for confirmation!
                     id="order-address"
                     name="address"
                     className="form-textarea"
-                    placeholder="Enter your full delivery address..."
+                    placeholder="Enter your full delivery address with PIN code..."
                     value={form.address}
                     onChange={handleChange}
                     style={{ minHeight: '80px' }}
                   />
+
+                  {/* PIN Code Delivery Check */}
+                  {detectedPin && (
+                    <div className={`delivery-check ${deliveryAvailable ? 'delivery-check--ok' : 'delivery-check--blocked'}`}>
+                      {deliveryAvailable ? (
+                        <>
+                          <CheckCircle size={14} />
+                          <span>Delivery available to {detectedPin}</span>
+                        </>
+                      ) : (
+                        <>
+                          <AlertTriangle size={14} />
+                          <span>Sorry, we don't deliver to {detectedPin} yet. We'll be coming soon!</span>
+                        </>
+                      )}
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -398,7 +427,7 @@ Customer is waiting for confirmation!
                 id="submit-order-btn"
                 type="submit"
                 className="modal-submit-btn"
-                disabled={loading || items.length === 0}
+                disabled={loading || items.length === 0 || isDeliveryBlocked}
               >
                 {loading ? (
                   <>

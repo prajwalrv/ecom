@@ -1,5 +1,7 @@
 import { CartProvider } from './context/CartContext'
+import { LocationProvider } from './context/LocationContext'
 import Navbar from './components/Navbar'
+import LocationBanner from './components/LocationBanner'
 import Hero from './components/Hero'
 import About from './components/About'
 import Menu from './components/Menu'
@@ -11,22 +13,25 @@ import Contact from './components/Contact'
 
 function App() {
   return (
-    <CartProvider>
-      {/* Fixed Elements */}
-      <Navbar />
-      <Cart />
-      <OrderModal />
+    <LocationProvider>
+      <CartProvider>
+        {/* Fixed Elements */}
+        <Navbar />
+        <LocationBanner />
+        <Cart />
+        <OrderModal />
 
-      {/* Page Sections */}
-      <main>
-        <Hero />
-        <About />
-        <Menu />
-        <Gallery />
-        <Reviews />
-        <Contact />
-      </main>
-    </CartProvider>
+        {/* Page Sections */}
+        <main>
+          <Hero />
+          <About />
+          <Menu />
+          <Gallery />
+          <Reviews />
+          <Contact />
+        </main>
+      </CartProvider>
+    </LocationProvider>
   )
 }
 
