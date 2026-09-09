@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Order System - Red Chilli Lantern</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap">
+  <style>
+    :root {
+      --bg-primary: #FFFBF5;
+      --bg-card: #FFFFFF;
+      --text-primary: #1A1A1A;
+      --text-secondary: #666666;
+      --accent: #C62828;
+      --accent-hover: #A01F1F;
+      --border: #E8E0D5;
+      --shadow: rgba(0, 0, 0, 0.08);
+      --success: #2E7D32;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      padding: 2rem;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.5rem;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+
+    .header p {
+      color: var(--text-secondary);
+    }
+
+    .test-section {
+      background: var(--bg-card);
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px var(--shadow);
+      margin-bottom: 2rem;
+    }
+
+    .test-section h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+      color: var(--text-primary);
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--text-primary);
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 1rem;
+      background: white;
+      color: var(--text-primary);
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .btn {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 1rem 2rem;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 1.05rem;
+      cursor: pointer;
+      transition: background 0.2s;
+      width: 100%;
+    }
+
+    .btn:hover:not(:disabled) {
+      background: var(--accent-hover);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .email-preview {
+      background: #f8f8f8;
+      padding: 2rem;
+      border-radius: 8px;
+      border: 2px dashed var(--border);
+      white-space: pre-wrap;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      line-height: 1.8;
+      display: none;
+      margin-top: 2rem;
+    }
+
+    .email-preview.show {
+      display: block;
+    }
+
+    .success-msg {
+      background: var(--success);
+      color: white;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      display: none;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .success-msg.show {
+      display: block;
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .cart-item:last-child {
+      border-bottom: none;
+    }
+
+    .item-qty {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    .total {
+      display: flex;
+      justify-content: space-between;
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 2px solid var(--border);
+    }
+
+    .info-box {
+      background: #FFF8E1;
+      border-left: 4px solid #FFA000;
+      padding: 1rem;
+      margin-bottom: 2rem;
+      border-radius: 4px;
+    }
+
+    .info-box h3 {
+      margin-bottom: 0.5rem;
+      color: #F57C00;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h1>🏮 Red Chilli Lantern</h1>
+    <p>Test Your Order System</p>
+  </div>
+
+  <div class="info-box">
+    <h3>📧 Testing Instructions</h3>
+    <p><strong>This is a demo page to show you how orders will be received.</strong></p>
+    <p>Fill in the form below and click "Send Test Order" to see exactly what email you'll receive when customers place orders.</p>
+  </div>
+
+  <div class="test-section">
+    <h2>Sample Cart</h2>
+    <div class="cart-item">
+      <div>
+        <div><strong>Steamed Chicken Momos</strong></div>
+        <div class="item-qty">8 Pcs</div>
+      </div>
+      <div>₹180 × 2</div>
+    </div>
+    <div class="cart-item">
+      <div>
+        <div><strong>Schezwan Chicken Fried Rice</strong></div>
+        <div class="item-qty">Full (500g)</div>
+      </div>
+      <div>₹240 × 1</div>
+    </div>
+    <div class="cart-item">
+      <div>
+        <div><strong>Kung Pao Chicken</strong></div>
+        <div class="item-qty">Serves 1-2</div>
+      </div>
+      <div>₹290 × 1</div>
+    </div>
+    <div class="total">
+      <span>Total</span>
+      <span>₹890</span>
+    </div>
+  </div>
+
+  <div class="test-section">
+    <h2>Customer Information</h2>
+    <form id="testForm">
+      <div class="form-group">
+        <label for="name">Customer Name *</label>
+        <input type="text" id="name" required placeholder="Rahul Kumar" value="Rahul Kumar">
+      </div>
+
+      <div class="form-group">
+        <label for="phone">Phone Number *</label>
+        <input type="tel" id="phone" required placeholder="+91 98765 43210" value="+91 98765 43210">
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email *</label>
+        <input type="email" id="email" required placeholder="customer@email.com" value="rahul.kumar@gmail.com">
+      </div>
+
+      <div class="form-group">
+        <label for="address">Delivery Address *</label>
+        <textarea id="address" required placeholder="Full delivery address" rows="3">123, MG Road, Koramangala, Bangalore - 560034</textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="instructions">Special Instructions (Optional)</label>
+        <textarea id="instructions" placeholder="Any special requests" rows="2">Extra spicy, no onions please</textarea>
+      </div>
+
+      <button type="submit" class="btn">Send Test Order</button>
+    </form>
+
+    <div class="success-msg" id="successMsg">
+      ✅ Test Order Sent! See the email preview below 👇
+    </div>
+
+    <div class="email-preview" id="emailPreview"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>📋 Next Steps</h2>
+    <p style="margin-bottom: 1rem;">After testing, here's how to set up real email delivery:</p>
+    <ol style="margin-left: 1.5rem; line-height: 2;">
+      <li>Go to <strong>https://formspree.io</strong> and sign up (free)</li>
+      <li>Create a new form and copy your Form ID</li>
+      <li>Open <strong>index.html</strong> in a text editor</li>
+      <li>Replace <strong>YOUR_FORM_ID</strong> with your actual ID (appears twice)</li>
+      <li>Save and test with a real order!</li>
+    </ol>
+    <p style="margin-top: 1rem; color: var(--text-secondary);">
+      Detailed instructions are in <strong>FORMSPREE_SETUP.md</strong>
+    </p>
+  </div>
+</div>
+
+<script>
+document.getElementById('testForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+
+  const name = document.getElementById('name').value;
+  const phone = document.getElementById('phone').value;
+  const email = document.getElementById('email').value;
+  const address = document.getElementById('address').value;
+  const instructions = document.getElementById('instructions').value || 'None';
+
+  const orderDate = new Date().toLocaleString('en-IN', {
+    timeZone: 'Asia/Kolkata',
+    dateStyle: 'full',
+    timeStyle: 'short'
+  });
+
+  const emailBody = `
+═══════════════════════════════════════════════════
+    NEW ORDER - RED CHILLI LANTERN 🏮
+═══════════════════════════════════════════════════
+
+Order Date & Time:
+${orderDate}
+
+───────────────────────────────────────────────────
+CUSTOMER DETAILS
+───────────────────────────────────────────────────
+Name:     ${name}
+Phone:    ${phone}
+Email:    ${email}
+
+Delivery Address:
+${address}
+
+───────────────────────────────────────────────────
+ORDER ITEMS
+───────────────────────────────────────────────────
+Steamed Chicken Momos (8 Pcs)
+  ₹180 × 2 = ₹360
+
+Schezwan Chicken Fried Rice (Full 500g)
+  ₹240 × 1 = ₹240
+
+Kung Pao Chicken (Serves 1-2)
+  ₹290 × 1 = ₹290
+
+───────────────────────────────────────────────────
+TOTAL AMOUNT: ₹890
+───────────────────────────────────────────────────
+
+Special Instructions:
+${instructions}
+
+═══════════════════════════════════════════════════
+
+⚡ ACTION REQUIRED:
+1. Call customer to confirm order
+2. Prepare the food
+3. Arrange delivery
+
+Customer is waiting for confirmation!
+
+═══════════════════════════════════════════════════
+`;
+
+  document.getElementById('emailPreview').textContent = emailBody;
+  document.getElementById('emailPreview').classList.add('show');
+  document.getElementById('successMsg').classList.add('show');
+
+  // Scroll to preview
+  document.getElementById('emailPreview').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+});
+</script>
+
+</body>
+</html>
