@@ -93,9 +93,59 @@ export default function OrderModal() {
     }
 
     // 2. Email send — this is the actual order fulfillment channel
-    const itemsText = items
-      .map(i => `${i.qty} × ${i.name}  =  ₹${i.price * i.qty}`)
-      .join('\n')
+    const orderDate = new Date().toLocaleString('en-IN', {
+      timeZone: 'Asia/Kolkata',
+      dateStyle: 'full',
+      timeStyle: 'short',
+    })
+
+    const deliveryAddress = form.deliveryType === 'delivery'
+      ? (form.address.trim() || '—')
+      : 'Pickup at restaurant'
+
+    const itemsFormatted = items
+      .map(i => `${i.name}\n  ₹${i.price} × ${i.qty} = ₹${i.price * i.qty}`)
+      .join('\n\n')
+
+    const emailBody = `══════════════════════════════════════════════════
+    NEW ORDER - RED CHILLI LANTERN 🏮
+═══════════════════════════════════════════════════
+
+Order Date & Time:
+${orderDate}
+
+───────────────────────────────────────────────────
+CUSTOMER DETAILS
+───────────────────────────────────────────────────
+Name:     ${form.name.trim()}
+Phone:    ${form.phone.trim()}
+Email:    ${form.email.trim() || '—'}
+
+Delivery Address:
+${deliveryAddress}
+
+───────────────────────────────────────────────────
+ORDER ITEMS
+───────────────────────────────────────────────────
+${itemsFormatted}
+
+───────────────────────────────────────────────────
+TOTAL AMOUNT: ₹${total}
+───────────────────────────────────────────────────
+
+Special Instructions:
+${form.instructions.trim() || 'None'}
+
+═══════════════════════════════════════════════════
+
+⚡ ACTION REQUIRED:
+1. Call customer to confirm order
+2. Prepare the food
+3. Arrange delivery
+
+Customer is waiting for confirmation!
+
+═══════════════════════════════════════════════════`
 
     let emailOk = false
     try {
@@ -108,20 +158,10 @@ export default function OrderModal() {
         body: JSON.stringify({
           access_key: import.meta.env.VITE_WEB3FORMS_KEY,
           subject: `🍜 New Order ${oid} — ${form.deliveryType === 'delivery' ? 'Delivery' : 'Pickup'}`,
-          from_name: form.name.trim(),
+          from_name: 'Red Chilli Lantern',
           email: form.email.trim() || 'no-reply@redchillilantern.in',
           _replyto: form.email.trim() || 'no-reply@redchillilantern.in',
-          restaurant_email: import.meta.env.VITE_RESTAURANT_EMAIL,
-          order_id: oid,
-          order_type: form.deliveryType === 'delivery' ? '🥡 Delivery' : '🏃 Pickup',
-          customer_name: form.name.trim(),
-          phone: form.phone.trim(),
-          address: form.deliveryType === 'delivery' ? (form.address.trim() || '—') : 'Pickup at restaurant',
-          instructions: form.instructions.trim() || 'None',
-          items: itemsText,
-          subtotal: `₹${subtotal}`,
-          tax_5_percent: `₹${tax}`,
-          total_amount: `₹${total}`,
+          message: emailBody,
         }),
       })
       const emailData = await emailRes.json()
